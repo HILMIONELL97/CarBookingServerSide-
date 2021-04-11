@@ -1,36 +1,43 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const expressValidator = require('express-validator')
+const expressValidator = require('express-validator');
+const passport = require("passport");
+
 
 //Import Routes
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
+const carRoutes = require('./routes/carRoute');
+const bookingRoutes = require('./routes/reserveRoute');
 
 
 //Config App
 require('dotenv').config();
+require('./config/db');
 const app = express();
-
-//Db mongoDB
-mongoose.connect(process.env.DATABASE, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true
-    })
-    .then(() => console.log('db connected'))
-    .catch(() => console.log('not nonnect to the database !'))
 
 //Middlewares
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
 app.use(expressValidator())
+if (process.env.NODE_ENV === 'developpement') app.use(morgan());
 
 //Routes Middleware
 app.use('/api', authRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api/car', carRoutes);
+app.use('/api/booking', bookingRoutes);
+
+// Passport Middleware
+app.use(passport.initialize());
+require("./config/passport")(passport);
+
+
+
+
+
+
 
 
 const port = process.env.PORT || 3000;

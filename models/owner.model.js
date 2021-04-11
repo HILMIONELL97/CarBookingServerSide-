@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const crypto = require('crypto');
+const { v1: uuid } = require('uuid');
 
 
-
-const userSchema = new Schema({
+const ownerSchema = new Schema({
     first_name: {
         type: String,
         required: true,
@@ -21,11 +22,12 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
+        maxlength: 50,
         trim: true,
-
+        unique: true
 
     },
-    password: {
+    hashed_password: {
         type: String,
         required: true,
         minlenght: 6,
@@ -40,14 +42,13 @@ const userSchema = new Schema({
         type: Number,
         trim: true
     },
-    rib: {
+    rip: {
         type: Number,
         required: true,
-        length: 8
+        length: 10
     },
-    date: {
-        type: Date,
-        default: Date.now,
+    salt: {
+        type: String
     },
 
     role: {
@@ -55,7 +56,37 @@ const userSchema = new Schema({
         enum: ['User', 'Owner'],
         default: 'Owner',
     },
-});
+}, { timestamps: true });
 
 
-module.exports = mongoose.model('Owner', userSchema);
+// ownerSchema.virtual('password')
+//     .set(function(password) {
+//         this._password = password;
+//         this.salt = uuid();
+//         this.hashed_password = this.cryptPassword(password)
+//     })
+//     .get(function() {
+//         return this._password;
+//     })
+
+// ownerSchema.methods = {
+//     authenticate: function(plainText) {
+//         return this.cryptPassword(plainText) === this.hashed_password;
+//     },
+//     cryptPassword: function(password) {
+//         if (!password) return '';
+
+//         try {
+
+//             return crypto
+//                 .createHmac('sha1', this.salt)
+//                 .update(password)
+//                 .digest('hex');
+
+//         } catch (error) {
+//             return ''
+//         }
+//     }
+// }
+
+module.exports = mongoose.model('Owner', ownerSchema);

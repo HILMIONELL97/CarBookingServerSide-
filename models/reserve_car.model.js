@@ -21,11 +21,11 @@ const reserveCarSchema = Schema({
     proposed_reduction: {
         type: Number,
     },
-    is_accepted: {
+    is_booked: {
         type: Boolean,
         required: true,
         default: false,
     },
 });
 
-module.exports = mongoose.model('reserveCar', reserveCarSchema);
+module.exports = mongoose.model('ReserveCar', reserveCarSchema);

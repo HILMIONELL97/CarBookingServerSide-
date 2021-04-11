@@ -1,4 +1,5 @@
   const mongoose = require('mongoose');
+  const { ObjectId } = mongoose.Schema;
 
   const { Schema } = mongoose;
 
@@ -30,12 +31,21 @@
           type: String,
           required: true,
           ennum: ['Essence', 'Diesel'],
-          default: 'Essence'
+
       },
       is_saled: {
           type: Boolean,
           required: true,
           default: false,
+      },
+      photo: {
+          data: Buffer,
+          contentType: String
+      },
+      id_place: {
+          type: Schema.Types.ObjectId,
+          ref: 'place',
+          required: true,
       },
   });
 
